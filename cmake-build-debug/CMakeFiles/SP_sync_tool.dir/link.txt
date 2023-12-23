@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/SP_sync_tool.dir/main.cpp.o -o SP_sync_tool 
