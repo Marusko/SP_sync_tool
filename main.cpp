@@ -1,4 +1,6 @@
 #include <iostream>
+#include "Client.h"
+#include "Server.h"
 
 int main(int argc, char *argv[]) {
     if (argc < 2) {
@@ -9,13 +11,14 @@ int main(int argc, char *argv[]) {
     std::string argument = argv[1];
 
     if (argument == "-client") {
-        std::cout << "Program is running as client." << std::endl;
-        // TODO start client
+        Client client;
+        client.run();
     } else if (argument == "-server") {
-        std::cout << "Program is running as server." << std::endl;
-        // TODO start server
+        Server server;
+        server.run();
     } else {
         std::cout << "Invalid startup argument! Use -client or -server!" << std::endl;
+        return 1;
     }
 
     return 0;

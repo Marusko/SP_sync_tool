@@ -3,4 +3,6 @@ project(SP_sync_tool)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(SP_sync_tool main.cpp)
+add_executable(SP_sync_tool main.cpp
+        Client.h
+        Server.h)

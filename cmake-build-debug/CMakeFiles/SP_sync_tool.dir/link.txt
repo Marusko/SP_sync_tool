@@ -1,1 +1,3 @@
-/usr/bin/c++ -g CMakeFiles/SP_sync_tool.dir/main.cpp.o -o SP_sync_tool 
+"C:\Program Files\JetBrains\CLion 2023.2.2\bin\cmake\win\x64\bin\cmake.exe" -E rm -f CMakeFiles\SP_sync_tool.dir/objects.a
+C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\ar.exe qc CMakeFiles\SP_sync_tool.dir/objects.a @CMakeFiles\SP_sync_tool.dir\objects1.rsp
+C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\G__~1.EXE -g -Wl,--whole-archive CMakeFiles\SP_sync_tool.dir/objects.a -Wl,--no-whole-archive -o SP_sync_tool.exe -Wl,--out-implib,libSP_sync_tool.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\SP_sync_tool.dir\linkLibs.rsp
