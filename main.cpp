@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
-#include "client.h"
-#include "server.h"
+#include "Client.h"
+#include "Server.h"
 
 int main() {
     std::string input;
