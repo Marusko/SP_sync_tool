@@ -57,4 +57,4 @@ Available commands:
 
 ---
 
-&copy; [Matúš Suský](https://github.com/Marusko), [David Kučera](https://github.com/david-kucera) 2023-2024
+&copy; [Matúš Suský](https://github.com/Marusko), [David Kučera](https://github.com/david-kucera) 2024
