@@ -309,6 +309,12 @@ int server::mainFunction() {
     std::string input;
     std::getline(std::cin, input);
     int port = std::stoi(input);
+
+    std::cout << "[Q] Enter path to directory: " << std::endl;
+    std::string file;
+    std::getline(std::cin, file);
+    dirPath = file;
+
     time_t now = time(nullptr);
     std::cout << "[" << strtok(ctime(&now), "\n") << "][I] The server will use port " << port << std::endl;
 

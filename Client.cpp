@@ -481,6 +481,11 @@ int client::mainMethod() {
     int port = std::stoi(input);
     std::cout << "[I] The client will connect to [" << server << "] and use port " << port << std::endl;
 
+    std::cout << "[Q] Enter path to directory: " << std::endl;
+    std::string file;
+    std::getline(std::cin, file);
+    syncPath = file;
+
     for (auto &entry : getLocalFileEntry()) {
         std::string fileName = entry.path().filename();
         unsigned long fileTime = (unsigned long)std::chrono::time_point_cast<std::chrono::milliseconds>(entry.last_write_time()).time_since_epoch().count();
