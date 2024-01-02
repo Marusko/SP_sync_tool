@@ -1,4 +1,4 @@
-#include "client.h"
+#include "Client.h"
 namespace fs = std::filesystem;
 
 std::string client::caesarCipher(const std::string& input, int s) {

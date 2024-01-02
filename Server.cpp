@@ -1,4 +1,4 @@
-#include "server.h"
+#include "Server.h"
 
 namespace fs = std::filesystem;
 
