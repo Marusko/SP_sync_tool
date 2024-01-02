@@ -25,7 +25,7 @@ private:
     std::mutex syncMutex;
     std::condition_variable syncFree;
     bool syncUsed = false;
-    std::string dirPath = "/home/kucera8/sp/s";
+    std::string dirPath;
     std::vector<FileInfo> serverFiles{};
 
     std::mutex mainMutex;

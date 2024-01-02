@@ -24,7 +24,7 @@ private:
 
     bool autoSync = false;
     bool autoSyncThreadRun = true;
-    std::string syncPath = "/home/kucera8/sp/c";
+    std::string syncPath;
 
     bool autoSyncRunning = false;
     bool syncRunning = false;
