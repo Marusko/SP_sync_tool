@@ -7,4 +7,5 @@ add_executable(SP_sync_tool main.cpp
         Client.h
         Server.h
         Client.cpp
-        messages.h)
+        messages.h
+        Server.cpp)
