@@ -1,121 +1,77 @@
-#ifndef SP_SYNC_TOOL_CLIENT_H
-#define SP_SYNC_TOOL_CLIENT_H
-
+#ifndef SYNK_CLIENT_H
+#define SYNK_CLIENT_H
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <algorithm>
+#include <cstdlib>
 #include <vector>
 #include <sstream>
+#include <unistd.h>
+#include <thread>
+#include <condition_variable>
+#include <mutex>
+#include "messages.h"
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <filesystem>
+#include <chrono>
 
-class Client {
-
+class client {
 private:
-    bool autoSync;
-    std::string syncPath;
-    double autoSyncInterval;
+    int clientSocket = 0;
+    struct sockaddr_in serverAddr{};
 
-    bool setAutoSync(const std::string& opt) {
-        if (opt == "on") {
-            autoSync = true;
-            return true;
-        } else if (opt == "off") {
-            autoSync = false;
-            return true;
-        }
-        return false;
-    }
+    bool autoSync = false;
+    bool autoSyncThreadRun = true;
+    std::string syncPath = "/home/kucera8/sp/c";
 
-    void setSyncPath(const std::string& path) {
-        syncPath = path;
-    }
+    bool autoSyncRunning = false;
+    bool syncRunning = false;
 
-    bool setAutoSyncInterval(double n) {
-        if (n <= 0) {
-            return false;
-        } else {
-            autoSyncInterval = n;
-            return true;
-        }
-    }
+    std::thread thread;
+    std::mutex mutex;
+    std::condition_variable cv;
+    void stopThread();
 
-    std::vector<std::string> split(const std::string& input) {
-        std::istringstream stream(input);
-        std::vector<std::string> tokens;
-        std::string token;
+    int autoSyncInterval = 10;
+    bool setAutoSync(const std::string& opt);
+    void setSyncPath(const std::string& path);
+    bool setAutoSyncInterval(int n);
+    std::vector<std::string> split(const std::string& input);
+    void processCommand(const std::string& command, const std::vector<std::string>& args);
 
-        while (stream >> token) {
-            tokens.push_back(token);
-        }
+    void sendCommandToServer(const CommandCode& code, const std::string &arg);
+    ResponseMessage receiveResponseFromServer();
+    bool downloadFileFromServer(FileInfo fileEntry);
+    bool uploadFileToServer(std::filesystem::directory_entry &fileEntry);
+    bool deleteFileOnServer(const std::string& fileName, CommandCode code);
+    bool deleteFile(const std::string& fileName);
+    void getServerFiles();
 
-        return tokens;
-    }
+    void parseFileList(const std::string& data);
+    std::vector<FileInfo> getLocalFileList();
+    std::vector<std::filesystem::directory_entry> getLocalFileEntry();
+    std::vector<std::string> getLocalFileStringList();
+    bool isFileUpdated(FileInfo file);
+    bool isFileNewOrUpdated(std::filesystem::directory_entry &fileEntry);
 
-    void processCommand(const std::string& command, const std::vector<std::string>& args) {
-        if (command == "sync") {
-            //TODO Implementuj logiku pre manuálnu synchronizáciu súborov
-            std::cout << "Synchronization in process\n";
-        } else if (command == "autosync") {
-            if (args.size() == 1) {
-                if (setAutoSync(args[0])) {
-                    std::cout << "Automatic synchronization " << args[0] << std::endl;
-                } else {
-                    std::cout << "Error: Setting is not specified (on/off).\n";
-                }
-            } else {
-                std::cout << "Error: Setting is not specified (on/off).\n";
-            }
-        } else if (command == "autocheck") {
-            if (args.size() == 1) {
-                double interval = stod(args[0]);
-                if (setAutoSyncInterval(interval)) {
-                    std::cout << "Automatic scanning every " << args[0] << " hours" << std::endl;
-                } else {
-                    std::cout << "Error: Not specified interval of scanning.\n";
-                }
-            } else {
-                std::cout << "Error: Not specified interval of scanning.\n";
-            }
-        } else if (command == "setpath") {
-            if (args.size() == 1) {
-                setSyncPath(args[0]);
-                std::cout << "Synchronization path set to: " << args[0] << std::endl;
-            } else {
-                std::cout << "Error: Path is not specified.\n";
-            }
-        } else if (command == "help" || command == "commands") {
-            std::cout << "Available commands:\n"
-                         "- sync - synchronizes files\n"
-                         "- autosync [on/off] - turns on/off automatic synchronization\n"
-                         "- autocheck [duration_in_hours] - sets interval (in hours) how frequently the files should update\n"
-                         "- setpath - sets path to the directory, that will be synchronized\n"
-                         "- exit - shuts down the application\n";
-        } else {
-            std::cout << "Error: Unknown command.\n";
-        }
-    }
+    void synchronizeFromServer();
+    void synchronizeToServer();
+
+    void autoSyncMethod();
+    void syncMethod();
+
+    int shift = 2;
+    std::string caesarCipher(const std::string& input, int s);
+
+    std::vector<FileInfo> serverFiles;
+    std::vector<FileSync> syncTimes;
 
 public:
-    void run() {
-        std::cout << "Program is running as client." << std::endl;
-        std::string userInput;
-        while (true) {
-
-            std::cout << "> ";
-            std::getline(std::cin, userInput);
-
-            std::vector<std::string> tokens = split(userInput);
-
-            if (tokens.empty()) {
-                continue;
-            }
-
-            std::string command = tokens[0];
-            if (command == "exit") {
-                return;
-            }
-
-            std::vector<std::string> args(tokens.begin() + 1, tokens.end());
-
-            processCommand(command, args);
-        }
-    }
+    client() : mutex{}, cv{}{}
+    int mainMethod();
 };
 
-#endif //SP_SYNC_TOOL_CLIENT_H
+
+#endif //SYNK_CLIENT_H
