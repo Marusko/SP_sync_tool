@@ -1,25 +1,22 @@
 #include <iostream>
-#include "Client.h"
-#include "Server.h"
+#include <string>
+#include "client.h"
+#include "server.h"
 
-int main(int argc, char *argv[]) {
-    if (argc < 2) {
-        std::cout << "You need to specify a program argument -client or -server!" << std::endl;
-        return 1;
+int main() {
+    std::string input;
+    while (true) {
+        std::cout << "Enter \n[ 's' / 'server' ] to run as server\n[ 'c' / 'client' ] to run as client\n";
+        std::getline(std::cin, input);
+
+        if (input == "s" || input == "server") {
+            server s;
+            return s.mainFunction();
+        } else if (input == "c" || input == "client") {
+            client c;
+            return c.mainMethod();
+        } else {
+            std::cout << "Invalid input, please enter valid arguments!" << std::endl;
+        }
     }
-
-    std::string argument = argv[1];
-
-    if (argument == "-client") {
-        Client client;
-        client.run();
-    } else if (argument == "-server") {
-        Server server;
-        server.run();
-    } else {
-        std::cout << "Invalid startup argument! Use -client or -server!" << std::endl;
-        return 1;
-    }
-
-    return 0;
 }
