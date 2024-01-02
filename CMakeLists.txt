@@ -5,4 +5,6 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_executable(SP_sync_tool main.cpp
         Client.h
-        Server.h)
+        Server.h
+        Client.cpp
+        messages.h)
