@@ -46,6 +46,7 @@ private:
 
     void syncFiles(int clientSocket);
     void handleExitCommand();
+    int handleConnections();
 
     int shift = 2;
     std::string caesarCipher(const std::string& input, int s);

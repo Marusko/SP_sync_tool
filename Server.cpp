@@ -304,6 +304,45 @@ void server::handleExitCommand() {
     }
 }
 
+int server::handleConnections() {
+    time_t now = time(nullptr);
+    std::vector<std::thread> clientThreads{};
+    sockaddr_in clientAddr{};
+    socklen_t clientAddrSize = sizeof(clientAddr);
+    bool exit = false;
+    while (!exit) {
+        int clientSocket = accept(serverSocket, (struct sockaddr*)&clientAddr, &clientAddrSize);
+        if (clientSocket == -1) {
+            now = time(nullptr);
+            std::cerr << "[" << strtok(ctime(&now), "\n") << "][E] Error accepting connection" << std::endl;
+            close(serverSocket);
+            return EXIT_FAILURE;
+        }
+        now = time(nullptr);
+        std::cout << "[" << strtok(ctime(&now), "\n") << "][I] Client [" << clientSocket << "] connected" << std::endl;
+
+        std::thread clientT(&server::syncFiles, this, clientSocket);
+        clientThreads.push_back(std::move(clientT));
+
+        std::unique_lock<std::mutex> lock(mainMutex);
+        while (mainUsed) {
+            mainFree.wait(lock);
+        }
+        mainUsed = true;
+        connectedClients++;
+        if (connectedClients == 0 || !canAccept) {
+            exit = true;
+        }
+        mainUsed = false;
+        mainFree.notify_one();
+        lock.unlock();
+    }
+    for (auto& t : clientThreads) {
+        t.join();
+    }
+    return 0;
+}
+
 int server::mainFunction() {
     std::cout << "[Q] Enter server port number: " << std::endl;
     std::string input;
@@ -350,36 +389,10 @@ int server::mainFunction() {
         return EXIT_FAILURE;
     }
 
-    sockaddr_in clientAddr{};
-    socklen_t clientAddrSize = sizeof(clientAddr);
+    auto connT = std::thread(&server::handleConnections, this);
     now = time(nullptr);
     std::cout << "[" << strtok(ctime(&now), "\n") << "][I] Server ON" << std::endl;
-    while (connectedClients > 0 || canAccept) {
-        if (canAccept) {
-            int clientSocket = accept(serverSocket, (struct sockaddr*)&clientAddr, &clientAddrSize);
-            if (clientSocket == -1) {
-                now = time(nullptr);
-                std::cerr << "[" << strtok(ctime(&now), "\n") << "][E] Error accepting connection" << std::endl;
-                close(serverSocket);
-                return EXIT_FAILURE;
-            }
-            now = time(nullptr);
-            std::cout << "[" << strtok(ctime(&now), "\n") << "][I] Client [" << clientSocket << "] connected" << std::endl;
-
-            std::thread clientT(&server::syncFiles, this, clientSocket);
-            std::unique_lock<std::mutex> lock(mainMutex);
-            while (mainUsed) {
-                mainFree.wait(lock);
-            }
-            mainUsed = true;
-            connectedClients++;
-            mainUsed = false;
-            mainFree.notify_one();
-            lock.unlock();
-            clientT.join();
-        }
-    }
-
+    connT.join();
     exitThread.join();
     close(serverSocket);
     now = time(nullptr);
