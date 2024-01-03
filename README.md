@@ -1,4 +1,4 @@
-# SynK
+# SP_sync_tool
 
 A tool for synchronizing files from the client to the server. 
 
@@ -18,7 +18,11 @@ Enter
 ```
 [Q] Enter server port number: 
 ```
-Here enter your desired port number and hit `Enter`, the server will then turn ON
+Here enter your desired port number and hit `Enter`
+```
+[Q] Enter path to directory: 
+```
+Here enter the path to a folder, which will be used by the server, and hit `Enter`, the server will then turn ON
 
 ### Client
 ```
@@ -28,32 +32,37 @@ Here enter the IP address of your server and hit `Enter`
 ```
 [Q] Enter server port number: 
 ```
-Here enter the server port and hit `Enter`, the client will then turn ON and connect to the server at the entered IP address and port
+Here enter the server port and hit `Enter`
+```
+[Q] Enter path to directory: 
+```
+Here enter the path to the folder which will be synchronized with the server and hit `Enter`, the client will then turn ON and connect to the server at the entered IP address and port
+> You can change the path later
 
 ## Controls
 
 ### Client controls
 Available commands:
-  * `slist` - get list of files on server
-  * `sync` - synchronize files with server
-  * `autosync [on|off]` - turn on / off automatic synchronization
-  * `autocheck [s]` - in seconds, sets how often the sync folder should be scanned for file updates
-  * `setpath [path]` - sets the path to the folder whose contents will be synchronized
-  * `delete [file]` - deletes the specified file
-  * `sdelete [file]` - deletes the specified file on server
-  * `restore [file]` - restores the specified file
-  * `exit` - closes the application
+* `slist` - get list of files on server
+* `sync` - synchronize files with server
+* `autosync [on|off]` - turn on / off automatic synchronization
+* `autocheck [s]` - in seconds, sets how often the sync folder should be scanned for file updates
+* `setpath [path]` - sets the path to the folder whose contents will be synchronized
+* `delete [file]` - deletes the specified file
+* `sdelete [file]` - deletes the specified file on server
+* `restore [file]` - restores the specified file
+* `exit` - closes the application
 
 ### Server controls
-  * `exit` - turn OFF the server, for this command to work, at least one client **must be connected**
+* `exit` - turn OFF the server, for this command to work, at least one client **must connect and disconnect** after entering this command
 
 ## Restrictions
-  * Editing files must be done when the `client` is on because it will not be synchronized
-  * Creating new files is possible even if `client` is not turned on
-  * Files **must** not have a space in the name
-  * Deleting files is done **exclusively via the client**
-  * Files will remain on the server until you issue a command to delete them on the server
-  * **Two** clients need to be launched for synchronization between two local folders
+* Editing files must be done when the `client` is on because it will not be synchronized
+* Creating new files is possible even if `client` is not turned on
+* Files **must** not have a space in the name
+* Deleting files is done **exclusively via the client**
+* Files will remain on the server until you issue a command to delete them on the server
+* **Two** clients need to be launched for synchronization between two local folders
 
 ---
 
